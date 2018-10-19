@@ -3,6 +3,7 @@ import logging
 import random
 import segno
 
+import stackutils
 import pickleking
 import dataverifiers
 
@@ -17,7 +18,7 @@ class dataking(saver):
         super().__init__()
         self._qrdir = qrdir
         self._imgdir = imgdir
-        
+
         self.accepted_keys = {'description': verify.verify_text,
                               'qty': verify.verify_decimal,
                               'image': verify.verify_image}
@@ -136,4 +137,4 @@ if __name__ == "__main__":
 
     x = data.load_data()
 
-    print(x)
+    stackutils.dump(x,4)
