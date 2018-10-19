@@ -17,7 +17,11 @@ class dataking(saver):
         super().__init__()
         self._qrdir = qrdir
         self._imgdir = imgdir
-        # self._data = {}
+        
+        self.accepted_keys = {'description': verify.verify_text,
+                              'qty': verify.verify_decimal,
+                              'image': verify.verify_image}
+
         print("dataking initialized")
 
     def generate_key(self):
@@ -52,12 +56,11 @@ class dataking(saver):
         return errorlist
 
     def add_data(self, key, data):
-        accepted_keys = {'hurt': verify.verify_text}
         errorlist = [{}, []]
         if key in self._data:
             for addkey in data:
-                if addkey in accepted_keys:
-                    checkdata = accepted_keys[addkey](data[addkey])
+                if addkey in self.accepted_keys:
+                    checkdata = self.accepted_keys[addkey](data[addkey])
                     if checkdata[0] == True:
                         self._data[key]['data'][addkey] = data[addkey]
                     else:
@@ -73,9 +76,6 @@ class dataking(saver):
         data = {}
         data['name'] = "default"
         data['dataking_version'] = dataking_version
-        data['description'] = ""
-        data['qty'] = 0
-        data['image'] = ""
         return data
 
     def put_in(self, inkey, boxkey):
