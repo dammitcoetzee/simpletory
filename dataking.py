@@ -1,3 +1,4 @@
+# --- Gerrit Coetzee 2018
 import logging
 import random
 import segno
