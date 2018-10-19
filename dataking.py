@@ -33,7 +33,7 @@ class dataking(saver):
     def new_entry(self):
         key = self.generate_key()
         self._data[key] = {
-            "name": "default", "holds": [], "data": self.generate_data_template(key)}
+            "holds": [], "data": self.generate_data_template(key)}
         return key
 
     def modify_data(self, key, newdata):
@@ -52,77 +52,83 @@ class dataking(saver):
         return errorlist
 
     def add_data(self, key, data):
-        accepted_keys = {'hurt':verify.verify_text}
-        errorlist=[{},[]]
+        accepted_keys = {'hurt': verify.verify_text}
+        errorlist = [{}, []]
         if key in self._data:
             for addkey in data:
                 if addkey in accepted_keys:
                     checkdata = accepted_keys[addkey](data[addkey])
-                    if checkdata[0]==True:
+                    if checkdata[0] == True:
                         self._data[key]['data'][addkey] = data[addkey]
-                    else: 
-                        errorlist[1].append({addkey:data[addkey], "error":checkdata[1]})
+                    else:
+                        errorlist[1].append(
+                            {addkey: data[addkey], "error": checkdata[1]})
                 else:
-                    errorlist[0][addkey]=data[addkey]
-            return errorlist        
+                    errorlist[0][addkey] = data[addkey]
+            return errorlist
         else:
             return "error"
 
     def generate_data_template(self, key):
         data = {}
-        data['version'] = dataking_version
+        data['name'] = "default"
+        data['dataking_version'] = dataking_version
         data['description'] = ""
         data['qty'] = 0
         data['image'] = ""
         return data
 
+    def put_in(self, inkey, boxkey):
+        '''This inserts an item into a box!'''
+        if (boxkey in self._data) and (inkey in self._data):
+            if inkey not in self._data[boxkey]['holds']:
+                self._data[boxkey]['holds'].append(inkey)
+            else:
+                return "already in box!"
+        else:
+            return "error"
+
+    def take_out(self, outkey, boxkey):
+        if (boxkey in self._data) and (outkey in self._data):
+            if outkey in self._data[boxkey]['holds']:
+                self._data[boxkey]['holds'].remove(outkey)
+            else:
+                return "error"
+        else:
+            return "error"
+
     def save_data(self):
         super().save_data(self._data)
-
-
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     print("main!")
     data = dataking()
-    # data.generate_key()
+
     key = data.new_entry()
     x = data.modify_data(
-        key, {"description": "cool stuff!!", "shirt": "it does", "test":"no","testtest":"no"})
-    print(x)
+        key, {"name": "cool things!", "description": "cool stuff!!", "shirt": "it does", "test": "no", "testtest": "no"})
+
     print("______")
-    print(data.add_data(key,x))
-    key = data.new_entry()
-    x = data.modify_data(
-        key, {"description": "cool stuff!!", "shirt": "it does", "test":"no","testtest":"no"})
-    print(x)
-    print("______")
-    print(data.add_data(key,x))
-    key = data.new_entry()
-    x = data.modify_data(
-        key, {"description": "cool stuff!!", "shirt": "it does", "test":"no","testtest":"no"})
-    print(x)
-    print("______")
-    print(data.add_data(key,x))
-    key = data.new_entry()
-    x = data.modify_data(
-        key, {"description": "cool stuff!!", "shirt": "it does", "test":"no","testtest":"no"})
-    print(x)
-    print("______")
-    print(data.add_data(key,x))
-    key = data.new_entry()
-    x = data.modify_data(
-        key, {"description": "cool stuff!!", "shirt": "it does", "test":"no","testtest":"no"})
-    print(x)
-    print("______")
-    print(data.add_data(key,x))
-    key = data.new_entry()
-    x = data.modify_data(
-        key, {"description": "cool stuff!!", "hurt": "it does", "test":"no","testtest":"no"})
-    print(x)
-    print("______")
-    print(data.add_data(key,x))
+    print(data.add_data(key, x))
+    key2 = data.new_entry()
+
+    data.put_in(key2, key)
+    print(data.put_in(key2, key))
+
+    data.take_out(key2, key)
+    print(data.put_in(key2, key))
+
+    key2 = data.new_entry()
+    data.take_out(key2, key)
+
+    print(data.put_in(key2, key))
+    key2 = data.new_entry()
+
+    key2 = data.new_entry()
+    key2 = data.new_entry()
+    key2 = data.new_entry()
 
     data.save_data()
 
