@@ -12,10 +12,11 @@ class pickleking(object):
         self._data = {}
 
     def load_data(self):
-        f = open("./"+self._datadir+"./"+"data.pickle", "rb")
+        f = open("./"+self._datadir+"/"+"data.pickle", "rb")
         data = pickle.load(f)
         f.close()
         logging.info("loading data successful")
+        self._data = data
         return data
 
     def save_data(self, data):

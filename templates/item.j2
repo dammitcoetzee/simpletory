@@ -1,0 +1,34 @@
+{% extends 'base.j2'%}
+
+{% block header %}
+<h1>{% block title %}{{item_values['data']['name']}}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+{{item_values['data']['key']}}
+<img src="./static/qrdir/{{item_values['key']}}.png">
+<ul>
+	<li>Holds
+		<ul>
+			{% for holders in item_values['holds']%}
+			<li><a href="{{url_for_item(holders)}}">{{url_for_item(holders)[1:]}}</a></li>
+			{%endfor%}
+		</ul>
+	</li>
+	<li>Held By:
+		<ul>
+			<li><a href="{{url_for_item(item_values['held'])}}">{{url_for_item(item_values['held'])[1:]}}</a>
+		</ul>
+	</li>
+	<li>data
+		<ul>
+			{% set data_values = item_values['data'] %}
+			{% for data,value in data_values.items() %}
+			<li>{{data}} : {{value}}</li>
+			{%endfor%}
+		</ul>
+	</li>
+	<li>{{item_values}}</li>
+</ul>
+
+{% endblock %}

@@ -67,6 +67,14 @@ class LabelGen(object):
             logging.info("Directory " + self._qrdir + " already exists")
 
         qr.save("./"+self._qrdir+"/"+self._qr[1], scale=10, color='darkblue')
+    
+    def qr_generated(self):
+        if os.path.isfile("./"+self._qrdir+"/"+self._qr[1]):
+            return True
+        else: return False
+
+    
+
 
     # Name getter, setter, deleter
     @property
@@ -112,13 +120,22 @@ class LabelGen(object):
     @qr.setter
     def qr(self, value):
         #logging.debug("qr setter, value:" + str(value))
-        self._qr = [str(value), str(value)+"_qr"+".png"]
+        self._qr = [str(value), str(value)+".png"]
 
     @qr.deleter
     def qr(self):
         #logging.debug("qr detleter called")
         del self._qr
 
+def generate_or_return_qr(key,qrdir):
+        #new label generator object
+        labeler = LabelGen(qrdir=qrdir, qr=key)
+        if labeler.qr_generated():
+            return True
+        else:
+            qr = labeler.generate_qr()
+            labeler.save_qr(qr)
+            return True
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)

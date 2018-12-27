@@ -1,0 +1,47 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} </title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<nav>
+  <h1><a href="/">Simpletory</a></h1>
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% block content %}{% endblock %}
+
+  <h1 id='time'>Time</h1>
+
+  <script type=text/javascript>
+
+  $(document).ready(function () {
+      $("#time").text("hello");
+    {# $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    function get_time(data){
+      $.getJSON($SCRIPT_ROOT + '/get_server_time'),{return data;},function(data){$("#time").text(data.time);}
+    }; #}
+
+
+    function server_time(data){
+      $("#time").text(data.time);
+    }
+    
+    function get_time(data) {
+        $.getJSON("{{ url_for('get_server_time')}}", {}, server_time);
+    }
+
+    var TestTimer = setInterval(get_time,1000);
+
+
+  
+
+  });
+      </script>
+
+</section>
+
+
+
+

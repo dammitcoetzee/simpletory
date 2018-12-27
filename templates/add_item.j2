@@ -1,0 +1,6 @@
+<form method="POST" action="{{url_for('add_item')}}" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    {{ form.name.label }} {{ form.name(size=20) }}
+    {{ form.image }}
+    <input type="submit" value="Go">
+</form>
