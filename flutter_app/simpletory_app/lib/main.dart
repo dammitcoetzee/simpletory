@@ -1,75 +1,98 @@
-import 'dart:async';
+// import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:barcode_scan/barcode_scan.dart';
-import 'package:flutter/services.dart';
+// import 'package:barcode_scan/barcode_scan.dart';
+// import 'package:flutter/services.dart';
 
-import 'selectionScreen.dart';
+// import 'selectionScreen.dart';
 
 void main() => runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
       home: HomePage(),
+      theme: ThemeData.dark(),
     ));
 
-class HomePage extends StatefulWidget {
-  @override
-  HomePageState createState() {
-    return new HomePageState();
-  }
+// App Bar Class, currently just prints the name of the current app
+class SimpletoryAppBar extends AppBar {
+  SimpletoryAppBar({Key key, this.titleName})
+      : super(title: Text("Simpletory: " + titleName));
+
+  final titleName;
 }
 
-class HomePageState extends State<HomePage> {
-  String result = "Hey there !";
-
-  Future _scanQR() async {
-    try {
-      String qrResult = await BarcodeScanner.scan();
-      setState(() {
-        result = qrResult;
-      });
-    } on PlatformException catch (ex) {
-      if (ex.code == BarcodeScanner.CameraAccessDenied) {
-        setState(() {
-          result = "Camera permission was denied";
-        });
-      } else {
-        setState(() {
-          result = "Unknown Error $ex";
-        });
-      }
-    } on FormatException {
-      setState(() {
-        result = "You pressed the back button before scanning anything";
-      });
-    } catch (ex) {
-      setState(() {
-        result = "Unknown Error $ex";
-      });
-    }
-  }
-
+//Main screen, shows the primary icons
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("QR Scanner"),
+      appBar: SimpletoryAppBar(
+        titleName: "Home Screen",
       ),
-      body: Center(
-        child: Text(
-          result,
-          style: new TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-          icon: Icon(Icons.camera_alt),
-          label: Text("Scan"),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => selectionScreen()),
-            );
-          }),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      body: iconGrid,
     );
+  }
+
+  final Widget iconGrid = Center(
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+        Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          
+          // Padding(padding: EdgeInsets.all(80), child: Text("")),
+          _button("History","history", false),
+          _button("Pack", "pack", false),
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          _button("Add", "add", false),
+          _button("List Pick", "list", false),
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          _button("Search", "search", false),
+          _button("Pick", "qr", true),
+        ]),
+      ]));
+
+  static _button(String buttonText, String buttonIndex, bool done) {
+    var possibleButtons = {
+      "qr": Icon(Icons.center_focus_strong),
+      "list": Icon(Icons.format_list_numbered),
+      "search": Icon(Icons.search),
+      "add": Icon(Icons.add_box),
+      "pack": Icon(Icons.file_download),
+      "history": Icon(Icons.history)
+    };
+
+    var buttonScreen ={
+      "qr": (){},
+      "list": (){},
+      "search": (){},
+      "add": (){},
+      "pack": (){},
+      "history": (){}
+    };
+// This is for development purposes, if it's red it's not implemented yet
+    _isDone(done) {
+      if (done) {
+        return Colors.white;
+      } else {
+        return Colors.red;
+      }
+    }
+
+    return Padding(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:[IconButton(
+          icon: possibleButtons[buttonIndex],
+          iconSize: 120,
+          onPressed: buttonScreen[buttonIndex],
+          color: _isDone(done),
+          tooltip: buttonText,
+        ),
+        Text(buttonText,
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold )),
+        ]
+        ))
+        ;
   }
 }
