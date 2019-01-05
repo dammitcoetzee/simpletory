@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 
 // import 'selectionScreen.dart';
+import 'simpletory_list_item.dart';
 
 void main() => runApp(MaterialApp(
       home: HomePage(),
       theme: ThemeData.dark(),
+      routes:{
+        '/listtest' : (context) => ListItemTestScreen(),
+      }
     ));
 
 // App Bar Class, currently just prints the name of the current app
@@ -27,7 +31,7 @@ class HomePage extends StatelessWidget {
       appBar: SimpletoryAppBar(
         titleName: "Home Screen",
       ),
-      body: iconGrid,
+      body:  iconGrid,
     );
   }
 
@@ -38,7 +42,7 @@ class HomePage extends StatelessWidget {
         Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           
           // Padding(padding: EdgeInsets.all(80), child: Text("")),
-          _button("History","history", false),
+          _button("History","history", false,),
           _button("Pack", "pack", false),
         ]),
         Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
@@ -51,7 +55,7 @@ class HomePage extends StatelessWidget {
         ]),
       ]));
 
-  static _button(String buttonText, String buttonIndex, bool done) {
+  static _button(String buttonText, String buttonIndex, bool done,) {
     var possibleButtons = {
       "qr": Icon(Icons.center_focus_strong),
       "list": Icon(Icons.format_list_numbered),
@@ -62,7 +66,8 @@ class HomePage extends StatelessWidget {
     };
 
     var buttonScreen ={
-      "qr": (){},
+      "qr": Navigator.pushNamed(context, '/listtest'),
+      // "qr" :(){},
       "list": (){},
       "search": (){},
       "add": (){},
